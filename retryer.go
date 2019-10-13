@@ -1,5 +1,7 @@
 package retryer
 
+import "time"
+
 type tryChain struct {
 	executeFuncError func() error
 	executeFuncBool  func() bool
@@ -28,6 +30,22 @@ func RetryForever() *tryChain {
 			if execute(chain) {
 				return
 			}
+		}
+	}
+
+	return chain
+}
+
+func RetryAndWait(durationsNanoseconds []time.Duration) *tryChain {
+	chain := &tryChain{}
+
+	chain.strategy = func() {
+		for i := 0; i < len(durationsNanoseconds); i++ {
+			if execute(chain) {
+				return
+			}
+
+			time.Sleep(durationsNanoseconds[i])
 		}
 	}
 
