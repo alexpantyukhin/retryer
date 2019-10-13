@@ -6,40 +6,45 @@ type tryChain struct {
 	strategy         func()
 }
 
-func Retryer() tryChain {
-	return tryChain{}
-}
+func Retry(numberOfRetry int) *tryChain {
+	chain := &tryChain{}
 
-func (chain tryChain) Retry(numberOfRetry int) {
-	for i := 0; i < numberOfRetry; i++ {
-		if execute(chain) {
-			return
+	chain.strategy = func() {
+		for i := 0; i < numberOfRetry; i++ {
+			if execute(chain) {
+				return
+			}
 		}
 	}
 
+	return chain
 }
 
-func (chain tryChain) RetryForever() {
-	for true {
-		if execute(chain) {
-			return
+func RetryForever() *tryChain {
+	chain := &tryChain{}
+
+	chain.strategy = func() {
+		for true {
+			if execute(chain) {
+				return
+			}
 		}
 	}
+
+	return chain
 }
 
-func (chain tryChain) ExecuteError(executeFunc func() error) tryChain {
-	return tryChain{
-		executeFuncError: executeFunc,
-	}
+func (chain *tryChain) ExecuteError(executeFunc func() error) {
+	chain.executeFuncError = executeFunc
+	chain.strategy()
 }
 
-func (chain tryChain) ExecuteBool(executeFunc func() bool) tryChain {
-	return tryChain{
-		executeFuncBool: executeFunc,
-	}
+func (chain *tryChain) ExecuteBool(executeFunc func() bool) {
+	chain.executeFuncBool = executeFunc
+	chain.strategy()
 }
 
-func execute(chain tryChain) bool {
+func execute(chain *tryChain) bool {
 	if chain.executeFuncBool != nil {
 		return chain.executeFuncBool()
 	}
