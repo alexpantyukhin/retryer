@@ -12,14 +12,14 @@ func TestRetry_WithBoolean_CallAsRequested(t *testing.T) {
 	counter := 0
 
 	Retry(10).
-	ExecuteBool(func() bool {
-		counter++
-		if counter == 100 {
-			return true
-		}
+		ExecuteBool(func() bool {
+			counter++
+			if counter == 100 {
+				return true
+			}
 
-		return false
-	})
+			return false
+		})
 
 	assert.Equal(t, counter, 10)
 }
@@ -28,14 +28,14 @@ func TestRetry_WithBoolean_CallLessIfTrue(t *testing.T) {
 	counter := 0
 
 	Retry(10).
-	ExecuteBool(func() bool {
-		counter++
-		if counter == 3 {
-			return true
-		}
+		ExecuteBool(func() bool {
+			counter++
+			if counter == 3 {
+				return true
+			}
 
-		return false
-	})
+			return false
+		})
 
 	assert.Equal(t, counter, 3)
 }
@@ -44,14 +44,14 @@ func TestRetry_WithError_CallAsRequested(t *testing.T) {
 	counter := 0
 
 	Retry(10).
-	ExecuteError(func() error {
-		counter++
-		if counter == 100 {
-			return nil
-		}
+		ExecuteError(func() error {
+			counter++
+			if counter == 100 {
+				return nil
+			}
 
-		return errors.New("Error")
-	})
+			return errors.New("Error")
+		})
 
 	assert.Equal(t, counter, 10)
 }
@@ -60,49 +60,32 @@ func TestRetry_WithError_CallLessIfTrue(t *testing.T) {
 	counter := 0
 
 	Retry(10).
-	ExecuteError(func() error {
-		counter++
-		if counter == 3 {
-			return nil
-		}
+		ExecuteError(func() error {
+			counter++
+			if counter == 3 {
+				return nil
+			}
 
-		return errors.New("Error")
-	})
+			return errors.New("Error")
+		})
 
 	assert.Equal(t, counter, 3)
 }
-
 
 func TestRetryForever_WithBoolean_CallAsRequested(t *testing.T) {
 	counter := 0
 
 	RetryForever().
-	ExecuteBool(func() bool {
-		counter++
-		if counter == 100 {
-			return true
-		}
+		ExecuteBool(func() bool {
+			counter++
+			if counter == 100 {
+				return true
+			}
 
-		return false
-	})
+			return false
+		})
 
 	assert.Equal(t, counter, 100)
-}
-
-func TestRetryForever_WithBoolean_CallLessIfTrue(t *testing.T) {
-	counter := 0
-
-	RetryForever().
-	ExecuteBool(func() bool {
-		counter++
-		if counter == 3 {
-			return true
-		}
-
-		return false
-	})
-
-	assert.Equal(t, counter, 3)
 }
 
 func TestRetryAndWait_WithBoolean_CallAsRequested(t *testing.T) {
@@ -110,14 +93,14 @@ func TestRetryAndWait_WithBoolean_CallAsRequested(t *testing.T) {
 
 	t0 := time.Now()
 	RetryAndWait([]time.Duration{1000 * time.Millisecond, 1000 * time.Millisecond}).
-	ExecuteBool(func() bool {
-		counter++
-		if counter == 10 {
-			return true
-		}
+		ExecuteBool(func() bool {
+			counter++
+			if counter == 10 {
+				return true
+			}
 
-		return false
-	})
+			return false
+		})
 	t1 := time.Now()
 	diff := t1.Sub(t0)
 
@@ -129,14 +112,33 @@ func TestRetryAndWait_WithBoolean_CallLessIfTrue(t *testing.T) {
 
 	t0 := time.Now()
 	RetryAndWait([]time.Duration{1000 * time.Millisecond, 1000 * time.Millisecond}).
-	ExecuteBool(func() bool {
-		counter++
-		if counter == 1 {
-			return true
-		}
+		ExecuteBool(func() bool {
+			counter++
+			if counter == 1 {
+				return true
+			}
 
-		return false
-	})
+			return false
+		})
+	t1 := time.Now()
+	diff := t1.Sub(t0)
+
+	assert.GreaterOrEqual(t, int64(diff), int64(0))
+}
+
+func TestRetryAndWaitForever_WithBoolean_CallAsRequested(t *testing.T) {
+	counter := 0
+
+	t0 := time.Now()
+	RetryAndWaitForever(func(attempt int) time.Duration { return time.Duration(attempt*100) * time.Millisecond }).
+		ExecuteBool(func() bool {
+			counter++
+			if counter == 3 {
+				return true
+			}
+
+			return false
+		})
 	t1 := time.Now()
 	diff := t1.Sub(t0)
 

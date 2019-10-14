@@ -52,6 +52,26 @@ func RetryAndWait(durationsNanoseconds []time.Duration) *tryChain {
 	return chain
 }
 
+func RetryAndWaitForever(durationAttemptFunc func(int) time.Duration) *tryChain {
+	chain := &tryChain{}
+
+	chain.strategy = func() {
+		counter := 0
+
+		for true {
+			if execute(chain) {
+				return
+			}
+
+			counter += 1
+
+			time.Sleep(durationAttemptFunc(counter))
+		}
+	}
+
+	return chain
+}
+
 func (chain *tryChain) ExecuteError(executeFunc func() error) {
 	chain.executeFuncError = executeFunc
 	chain.strategy()
