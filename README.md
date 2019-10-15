@@ -1,5 +1,8 @@
 # Retryer
 
+[![Build Status](https://travis-ci.org/alexpantyukhin/retryer.svg?branch=master
+)](https://travis-ci.org/alexpantyukhin/retryer)
+
 The tiny library for retrying any action.
 
 # Motivation
