@@ -17,49 +17,49 @@ I needed in some similar behavior in the one of project. A half of a minute of g
 ## Retry number of times
 
 ```go
-	Retry(10).
-		ExecuteBool(func() bool {
-            counter++
+Retry(10).
+    ExecuteBool(func() bool {
+        counter++
 
-			if counter == 5 {
-				return true
-			}
+        if counter == 5 {
+            return true
+        }
 
-			return false
-		})
+        return false
+    })
 ```
 
 ## Retry with error
 
 ```go
-	Retry(10).
-		ExecuteError(func() error {
-            conn, err := MakeConnection()
+Retry(10).
+    ExecuteError(func() error {
+        conn, err := MakeConnection()
 
-			return err
-		})
+        return err
+    })
 ```
 
 ## Retry with wait
 
 ```go
-	RetryAndWait([]time.Duration{1000 * time.Millisecond, 1000 * time.Millisecond}).
-		ExecuteError(func() error {
-            conn, err := MakeConnection()
+RetryAndWait([]time.Duration{1000 * time.Millisecond, 1000 * time.Millisecond}).
+    ExecuteError(func() error {
+        conn, err := MakeConnection()
 
-			return err
-		})
+        return err
+    })
 ```
 
 ## retry with wait forever
 
 ```go
-	RetryAndWaitForever(func(attempt int) time.Duration { return time.Duration(attempt*100) * time.Millisecond }).
-		ExecuteError(func() error {
-            conn, err := MakeConnection()
+RetryAndWaitForever(func(attempt int) time.Duration { return time.Duration(attempt*100) * time.Millisecond }).
+    ExecuteError(func() error {
+        conn, err := MakeConnection()
 
-			return err
-		})
+        return err
+    })
 ```
 
 # Installation
