@@ -10,7 +10,7 @@ The tiny library for retrying any action.
 I needed in some similar behavior in the one of project. A half of a minute of googling showed nothing. That's why the decision to extract the library was made.
 
 # Plans
-   - [] Add cancellation context.
+   - [ ] Add cancellation context.
 
 # Usages
 
