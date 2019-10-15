@@ -8,6 +8,7 @@ type tryChain struct {
 	strategy         func()
 }
 
+// Retry is used for running the action until number of retries is reached or the action is runned successfully.
 func Retry(numberOfRetry int) *tryChain {
 	chain := &tryChain{}
 
@@ -22,6 +23,7 @@ func Retry(numberOfRetry int) *tryChain {
 	return chain
 }
 
+// RetryForever is used for running the action forever until the action is runned successfully.
 func RetryForever() *tryChain {
 	chain := &tryChain{}
 
@@ -36,6 +38,7 @@ func RetryForever() *tryChain {
 	return chain
 }
 
+// RetryAndWait is used for running the action and wait durationsNanoseconds until number of retries is reached or action is runned successfully.
 func RetryAndWait(durationsNanoseconds []time.Duration) *tryChain {
 	chain := &tryChain{}
 
@@ -52,6 +55,7 @@ func RetryAndWait(durationsNanoseconds []time.Duration) *tryChain {
 	return chain
 }
 
+// RetryAndWaitForever is used for running the action and wait until action is runned successfully.
 func RetryAndWaitForever(durationAttemptFunc func(int) time.Duration) *tryChain {
 	chain := &tryChain{}
 
@@ -63,7 +67,7 @@ func RetryAndWaitForever(durationAttemptFunc func(int) time.Duration) *tryChain 
 				return
 			}
 
-			counter += 1
+			counter++
 
 			time.Sleep(durationAttemptFunc(counter))
 		}
@@ -72,11 +76,13 @@ func RetryAndWaitForever(durationAttemptFunc func(int) time.Duration) *tryChain 
 	return chain
 }
 
+// ExecuteError attach action which returns error if the action ran unsuccessfully
 func (chain *tryChain) ExecuteError(executeFunc func() error) {
 	chain.executeFuncError = executeFunc
 	chain.strategy()
 }
 
+// ExecuteError attach action which returns false if the action ran unsuccessfully
 func (chain *tryChain) ExecuteBool(executeFunc func() bool) {
 	chain.executeFuncBool = executeFunc
 	chain.strategy()
