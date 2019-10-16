@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/alexpantyukhin/retryer.svg?branch=master
 )](https://travis-ci.org/alexpantyukhin/retryer)
+[![GoDoc](https://godoc.org/alexpantyukhin/retryer?status.svg)](https://godoc.org/github.com/alexpantyukhin/retryer)
 
 The tiny library for retrying any action.
 
